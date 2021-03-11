@@ -1,4 +1,9 @@
 <?php 
+
+
+
+
+
 function connectDatabase(){
     $servername = "localhost";
     $username = "root";
@@ -29,7 +34,7 @@ function getLists(){
 
 function getTasks($listid){
     $connect = connectDatabase();
-    $query = $connect->prepare("SELECT id AS taskid, listid, task, beschrijving, duur FROM tasks WHERE listid = :listid");
+    $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = :listid");
     $query->execute(["listid" => $listid]);
     return $query->fetchAll();
 }
@@ -84,5 +89,28 @@ function updateList($listname, $id){
     window.location.href='index.php';
     </script>";
 }
+
+function sortTasks($listid){
+    $connect = connectDatabase();
+    $query = $connect->prepare("SELECT id AS taskid, listid, task, beschrijving, duur FROM tasks WHERE listid = :listid ORDER BY :listid");
+    $query->execute(["listid" => $listid]);
+    return $query->fetchAll();
+}
+
+function updateTask($taskid, $time, $description, $status){
+    $connect = connectDatabase();
+    $sql = "UPDATE tasks SET time = :time, description = :description, status = :status WHERE id = :taskid ";
+    $stmt = $connect->prepare($sql);
+    $stmt->execute(['taskid'=> $taskid, 'time'=> $time, 'description'=> $description, 'status'=> $status]);
+}
+
+function getStatus(){
+    $connect = connectDatabase();
+    $query = $connect->prepare("SELECT * FROM status");
+    $query->execute();
+    return $query->fetchAll();
+}
+
+
 
 ?>

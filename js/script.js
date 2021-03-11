@@ -1,4 +1,3 @@
- const edittiltle = document.getElementById("edittitle");
 
  function editTitle(listname){
     const title = document.getElementById("title"+listname);
@@ -9,6 +8,12 @@
 }
 
 function showtaskdetails(taskid){
+    const allTasks = document.getElementsByClassName("tasks");
+    for(i=0;i<allTasks.length;i++){
+        if (allTasks[i].style.display == "block"){
+            allTasks[i].style.display = "none";
+        }
+    }
     const task = document.getElementById("task"+taskid);
     task.style.display = "block";
     
