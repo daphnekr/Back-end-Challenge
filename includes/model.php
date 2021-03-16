@@ -1,9 +1,4 @@
 <?php 
-
-
-
-
-
 function connectDatabase(){
     $servername = "localhost";
     $username = "root";
@@ -32,10 +27,15 @@ function getLists(){
     return $query->fetchAll();
 }
 
-function getTasks($listid){
+function getTasks($listid, $sortTask){
     $connect = connectDatabase();
-    $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = :listid");
-    $query->execute(["listid" => $listid]);
+    if ($sortTask == null){
+        $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id AS statusid, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = :listid");
+        $query->execute(["listid" => $listid]);
+    } else {
+        $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id AS statusid, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = :listid ORDER BY :sortTask DESC");
+        $query->execute(["listid" => $listid, "sortTask" => $sortTask]);        
+    }
     return $query->fetchAll();
 }
 
@@ -44,14 +44,12 @@ function createList($listname){
     $query = "INSERT INTO list (listname) VALUES (:listname)";
     $stmt = $connect->prepare($query);
     $stmt->execute(['listname'=> $listname]);
-    echo "<script>
-    window.location.href='index.php';
-    </script>";
+
 }
 
 function createTask($task, $listid){
     $connect = connectDatabase();
-    $sql = "INSERT INTO tasks (listid, task) VALUES (:listid, :task)";
+    $sql = "INSERT INTO tasks (listid, task, status) VALUES (:listid, :task, 1)";
     $stmt = $connect->prepare($sql);
     $stmt->execute(['listid'=> $listid, 'task'=> $task]);
 }
@@ -59,18 +57,12 @@ function createTask($task, $listid){
 function deleteTask($taskid){
     $connect = connectDatabase();
     $query = $connect->prepare("DELETE FROM tasks WHERE id = :taskid");
-    echo "<script>
-    window.location.href='index.php';
-    </script>";
     return $query->execute(["taskid" => $taskid]);
 }
 function deleteList($listid){
     $connect = connectDatabase();
     $query = $connect->prepare("DELETE FROM list WHERE id = :listid");
     $query1 = $connect->prepare("DELETE FROM tasks WHERE listid = :listid");
-    echo "<script>
-    window.location.href='index.php';
-    </script>";
     $query1->execute(["listid" => $listid]);
     return $query->execute(["listid" => $listid]);
 }
@@ -85,17 +77,14 @@ function updateList($listname, $id){
     $connect = connectDatabase();
     $data = $connect->prepare("UPDATE list SET listname = :listname WHERE id = :id");
     $data->execute(['listname' => $listname,'id' => $id]);
-    echo "<script>
-    window.location.href='index.php';
-    </script>";
 }
 
-function sortTasks($listid){
-    $connect = connectDatabase();
-    $query = $connect->prepare("SELECT id AS taskid, listid, task, beschrijving, duur FROM tasks WHERE listid = :listid ORDER BY :listid");
-    $query->execute(["listid" => $listid]);
-    return $query->fetchAll();
-}
+// function sortTasks($listid){
+//     $connect = connectDatabase();
+//     $query = $connect->prepare("SELECT id AS taskid, listid, task, beschrijving, duur FROM tasks WHERE listid = :listid ORDER BY :listid");
+//     $query->execute(["listid" => $listid]);
+//     return $query->fetchAll();
+// }
 
 function updateTask($taskid, $time, $description, $status){
     $connect = connectDatabase();

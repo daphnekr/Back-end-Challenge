@@ -17,5 +17,9 @@
         include('includes/content.php');
         ?>
     </div>
+
+<div class="footer">
+  <p>Daphne Kramer 2021</p>
+</div>
 </body>
 </html>
