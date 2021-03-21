@@ -7,11 +7,21 @@ include("includes/validation.php");
 
 <div class="row">
     <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-      <label for="optie-select">Sorteren op:</label>
-      <select name="options" id="optie-select">
-          <option value="time">Tijd</option>
-          <option value="tasks.status">Status</option>
+      <label for="optie-select">Sorteren op tijd:</label>
+      <select class="form-select" name="order" id="optie-select">
+          <option value="ASC">van laag naar hoog</option>
+          <option value="DESC">van hoog naar laag</option>
       </select>
+      <input name="options" type="hidden" value="time">
+      <input type ="submit" value="Verander"><br>
+    </form> 
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+      <label for="optie-select">Sorteren op status:</label>
+      <select name="options" class="form-select">
+        <?php foreach($status as $statusdata){?>
+            <option value="status.id = <?php echo $statusdata['id'];?>" ><?php echo $statusdata['status'];?></option>
+        <?php } ?>
+        </select>
       <input type ="submit" value="Verander">
     </form>
 <?php foreach($data as $list){ ?>
@@ -26,7 +36,7 @@ include("includes/validation.php");
             </form>
             <?php
 
-            $data1 = getTasks($list["idlist"], $_POST["options"]); 
+            $data1 = getTasks($list["idlist"], $_POST["options"], $_POST["order"]); 
 
             foreach($data1 as $task){ 
                 ?><a  type="button" class="btn <?php if ($task['status'] == "Klaar") echo 'btn-outline-success'; if ($task['status'] == "Mee bezig") echo 'btn-outline-warning'; if ($task['status'] == "Nog te doen") echo 'btn-outline-danger'; ?>  mb-1" onclick="showtaskdetails(<?php echo $task['taskid']; ?>);"><?php echo $task["task"]; ?></a>  <a class="text-danger" href="index.php?taskid=<?php echo $task["taskid"];?>" onclick="return confirm('Weet je zeker dat je deze taak wilt verwijderen?');"><i class="fas fa-trash-alt"></i></a> <br> 
