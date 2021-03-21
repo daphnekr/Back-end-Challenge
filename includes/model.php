@@ -33,8 +33,8 @@ function getTasks($listid, $sortTask){
         $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id AS statusid, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = :listid");
         $query->execute(["listid" => $listid]);
     } else {
-        $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id AS statusid, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = :listid ORDER BY :sortTask DESC");
-        $query->execute(["listid" => $listid, "sortTask" => $sortTask]);        
+        $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id AS statusid, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = $listid ORDER BY $sortTask DESC");
+        $query->execute();
     }
     return $query->fetchAll();
 }
@@ -78,13 +78,6 @@ function updateList($listname, $id){
     $data = $connect->prepare("UPDATE list SET listname = :listname WHERE id = :id");
     $data->execute(['listname' => $listname,'id' => $id]);
 }
-
-// function sortTasks($listid){
-//     $connect = connectDatabase();
-//     $query = $connect->prepare("SELECT id AS taskid, listid, task, beschrijving, duur FROM tasks WHERE listid = :listid ORDER BY :listid");
-//     $query->execute(["listid" => $listid]);
-//     return $query->fetchAll();
-// }
 
 function updateTask($taskid, $time, $description, $status){
     $connect = connectDatabase();
