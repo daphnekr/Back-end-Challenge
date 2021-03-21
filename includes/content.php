@@ -17,7 +17,7 @@ include("includes/validation.php");
 <?php foreach($data as $list){ ?>
     <div class="col-sm bg-light border m-2 p-2">
         <form class = "form" action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
-            <h3 id="title<?php echo $list["listname"] ?>">
+            <h3 id="title<?php echo $list["listname"] ?>"> 
                 <?php echo $list["listname"]?> <a id="edittitle" onclick="editTitle('<?php echo $list['listname']?>')" class="text-info"><i class="fas fa-edit fa-xs"></i></a>
                 <a class="text-danger" href="index.php?idlist=<?php echo $list["idlist"];?>" onclick="return confirm('Weet je zeker dat je deze lijst wilt verwijderen?');"><i class="fas fa-trash-alt fa-xs"></i></a>
                 
@@ -56,16 +56,19 @@ include("includes/validation.php");
             }
         ?>
         <form class = "form mt-2" action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
-            <input type="text" name="task" placeholder = "Voeg taak toe"/>
+            <input type="text" name="task" placeholder = "Voeg taak toe"/> 
             <input name="listid" type="hidden" value = <?php  echo $list["idlist"] ?> />
-        </form>
+        </form> 
     </div>
     <?php
-        }
+        } 
+        if ($taskErr != "") echo "<script type='text/javascript'> alert('$taskErr') </script>";
+        if ($editListnameErr != "") echo "<script type='text/javascript'> alert('$editListnameErr') </script>";
+        if ($editTaskErr != "") echo "<script type='text/javascript'> alert('$editTaskErr') </script>";
     ?>
     <div class="col-sm">
         <form class = "form" action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
-            <input type="text" name="listname" placeholder = "Voeg een nieuwe lijst toe"/>
+            <input type="text" name="listname" placeholder = "Voeg een nieuwe lijst toe"/><span> <?php echo $listnameErr;?></span>
         </form>
     </div>
 </div>
