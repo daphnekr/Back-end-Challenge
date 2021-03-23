@@ -30,13 +30,13 @@ function getLists(){
 function getTasks($listid, $sortTask, $order){
     $connect = connectDatabase();
     if ($order == null){
-        $order = "DESC";
+        $order = "";
     }
     if ($sortTask == null){
         $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id AS statusid, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = :listid");
         $query->execute(["listid" => $listid]);
     } else {
-        $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id AS statusid, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = $listid ORDER BY $sortTask $order");
+        $query = $connect->prepare("SELECT tasks.id AS taskid, listid, task, description, time, status.id AS statusid, status.status AS status FROM tasks INNER JOIN status on tasks.status = status.id WHERE listid = $listid $sortTask $order");
         $query->execute();
     }
     return $query->fetchAll();

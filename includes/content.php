@@ -12,14 +12,14 @@ include("includes/validation.php");
           <option value="ASC">van laag naar hoog</option>
           <option value="DESC">van hoog naar laag</option>
       </select>
-      <input name="options" type="hidden" value="time">
+      <input name="options" type="hidden" value="ORDER BY time">
       <input type ="submit" value="Verander"><br>
     </form> 
     <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
       <label for="optie-select">Sorteren op status:</label>
       <select name="options" class="form-select">
         <?php foreach($status as $statusdata){?>
-            <option value="status.id = <?php echo $statusdata['id'];?>" ><?php echo $statusdata['status'];?></option>
+            <option value="AND status.id = <?php echo $statusdata['id'];?>" ><?php echo $statusdata['status'];?></option>
         <?php } ?>
         </select>
       <input type ="submit" value="Verander">
