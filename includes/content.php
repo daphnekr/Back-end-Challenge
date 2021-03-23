@@ -16,7 +16,7 @@ include("includes/validation.php");
       <input type ="submit" value="Verander"><br>
     </form> 
     <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-      <label for="optie-select">Sorteren op status:</label>
+      <label for="optie-select">Filter op status:</label>
       <select name="options" class="form-select">
         <?php foreach($status as $statusdata){?>
             <option value="AND status.id = <?php echo $statusdata['id'];?>" ><?php echo $statusdata['status'];?></option>
